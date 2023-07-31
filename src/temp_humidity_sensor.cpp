@@ -1,3 +1,4 @@
+#include "SingletonMqttClient.hpp"
 #include "secrets.hpp"
 #include <Arduino.h>
 #include <AsyncMqttClient.h>
@@ -14,7 +15,7 @@
 float temperature;
 float humidity;
 
-AsyncMqttClient mqttClient;
+AsyncMqttClient& mqttClient = SingletonMqttClient::getInstance();
 
 Ticker mqttReconnectTimer;
 Ticker wifiReconnectTimer;
