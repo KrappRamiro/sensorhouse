@@ -1,4 +1,5 @@
 #include "SingletonMqttClient.hpp"
+#include "mqttUtils.hpp"
 #include "secrets.hpp"
 #include <Arduino.h>
 #include <AsyncMqttClient.h>
@@ -9,8 +10,6 @@
 
 #define PUB_TEMPERATURE
 #define PUB_HUMIDITY
-#define PLACE "habitacion_ramiro" // TODO: Pasar esto como flag de compilacion
-#define DEVICE_NAME "" // TODO: esto como flag de compilacion
 
 float temperature;
 float humidity;
@@ -26,7 +25,7 @@ WiFiEventHandler wifiDisconnectHandler;
 unsigned long previousMillis = 0;
 const long interval = 10000;
 
-// ================       Callback function - they are executed asynchronously.       ================ //
+// ========   Callback function - they are executed asynchronously.   ======== //
 #pragma region callback
 /// @brief connects your ESP8266 to your router:
 void connectToWifi()
@@ -82,27 +81,7 @@ void onMqttPublish(uint16_t packetID)
 	Serial.printf("Publish acknowledged with packedID: %u\n", packetID);
 }
 #pragma endregion callback
-// ==============================          End of callback functions          ======================== //
-
-template <typename T>
-uint16_t publishWrapper(AsyncMqttClient& asyncMqttClient, const char* item, const T& payload, uint8_t qos, bool retain)
-{
-	// Assuming there is a PLACE string defined via compilation flag
-	char topic[256];
-	snprintf(topic, sizeof(topic), "%s/set/%s", PLACE, item); // Safely concatenate the strings
-
-	if constexpr (std::is_same_v<T, float>) {
-		char payloadStr[20]; // A float with 18 digits and 2 decimals should fit within 20 characters
-		snprintf(payloadStr, sizeof(payloadStr), "%.2f", payload);
-		return asyncMqttClient.publish(topic, qos, retain, payloadStr);
-	} else {
-		// For other types, publish as is
-		// Make sure the payload type can be converted to a string (e.g., int, char[], etc.)
-		// If not, handle the appropriate conversion here or raise a compilation error.
-		// Example: return asyncMqttClient.publish(topic, qos, retain, String(payload).c_str());
-		return asyncMqttClient.publish(topic, qos, retain, String(payload).c_str());
-	}
-}
+// ================     End of callback functions     ================ //
 
 void setup()
 {
