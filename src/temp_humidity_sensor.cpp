@@ -34,10 +34,6 @@ void loop()
 	if (currentMillis - previousMillis >= interval) {
 		previousMillis = currentMillis;
 		float temperature = random(20, 30);
-		Serial.println("This should be publishing");
-		Serial.println(publishWrapper(mqttClient, "temperature", temperature, 2, true));
-		Serial.println(publishWrapper(mqttClient, "temperature", 1, 2, true));
-		Serial.println(publishWrapper(mqttClient, "motd", "life could be dream", 2, true));
-		// mqttClient.publish("test", 2, true, "esto es un test");
+		publishWrapper(mqttClient, "temperature", temperature, 2, true);
 	}
 }
