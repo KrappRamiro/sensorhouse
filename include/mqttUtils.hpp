@@ -17,11 +17,12 @@ Templates dont need to go in a separate cpp file https://stackoverflow.com/quest
 template <typename T>
 uint16_t publishWrapper(AsyncMqttClient& asyncMqttClient, const char* item, const T& payload, uint8_t qos, bool retain)
 {
-
 	// Assuming there is a PLACE string defined via compilation flag
 	char topic[256];
 	snprintf(topic, sizeof(topic), "%s/set/%s", PLACE, item); // Safely concatenate the strings
 
+	Serial.print("Publishing to topic");
+	Serial.println(topic);
 	if constexpr (std::is_same_v<T, float>) { // If the payload is a float
 		char payloadStr[20]; // A float with 18 digits and 2 decimals should fit within 20 characters
 		snprintf(payloadStr, sizeof(payloadStr), "%.2f", payload);
