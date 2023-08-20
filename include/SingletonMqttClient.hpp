@@ -59,7 +59,10 @@ void loop()
 
 /**
  * @class SingletonMqttClient
- * @brief Provides a singleton wrapper for the MQTT client functionality. It instantiates its own WiFi client
+ * @brief Provides a singleton wrapper for the MQTT client functionality. It instantiates its own WiFi client.
+ * For example usage, please read the doxygen at the top of the file.
+ * Remember to use assing it to a variable using: AsyncMqttClient& mqttClient = SingletonMqttClient::getInstance();
+ * and to setup it using SingletonMqttClient::setup();
  */
 class SingletonMqttClient {
 public:
