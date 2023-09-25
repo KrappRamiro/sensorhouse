@@ -17,6 +17,25 @@ AsyncMqttClient& mqttClient = SingletonMqttClient::getInstance();
 unsigned long previousMillis = 0;
 const long interval = 10000;
 
+float getRandomFloat(long min, long max)
+{
+	float randomTemperature = random(min, max);
+	// Generate a random integer between 0 and 99
+	int randomInt = random(100);
+	// Convert the integer to a float and divide by 100 to get a decimal between 0.00 and 0.99
+	float randomDecimal = static_cast<float>(randomInt) / 100.0f;
+	return randomTemperature + randomDecimal;
+}
+float getTemperature()
+{
+	return getRandomFloat(-20, 60);
+}
+
+float getHumidity()
+{
+	return getRandomFloat(0, 99);
+}
+
 void setup()
 {
 	Serial.begin(115200);
@@ -31,9 +50,14 @@ void loop()
 
 	unsigned long currentMillis = millis();
 
-	if (currentMillis - previousMillis >= interval) {
-		previousMillis = currentMillis;
-		float temperature = random(20, 30);
-		publishWrapper(mqttClient, "temperature", temperature, 2, true);
+	if (currentMillis - previousMillis < interval) {
+		// Return early if the condition is not met
+		return;
 	}
+	previousMillis = currentMillis;
+
+	float temperature = getTemperature();
+	float humidity = getHumidity();
+	publishWrapper(mqttClient, "temperature", temperature, 2, true);
+	publishWrapper(mqttClient, "humidity", humidity, 2, true);
 }

@@ -21,8 +21,10 @@ uint16_t publishWrapper(AsyncMqttClient& asyncMqttClient, const char* item, cons
 	char topic[256];
 	snprintf(topic, sizeof(topic), "%s/set/%s", PLACE, item); // Safely concatenate the strings
 
-	Serial.print("Publishing to topic");
-	Serial.println(topic);
+	Serial.print("Publishing to topic ");
+	Serial.print(topic);
+	Serial.print(": ");
+	Serial.println(payload);
 	if constexpr (std::is_same_v<T, float>) { // If the payload is a float
 		char payloadStr[20]; // A float with 18 digits and 2 decimals should fit within 20 characters
 		snprintf(payloadStr, sizeof(payloadStr), "%.2f", payload);
